@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import  { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
 import { fetchBooks ,resetBooks} from "../redux/booksSlice";
@@ -6,7 +6,7 @@ import { List, AutoSizer, InfiniteLoader } from "react-virtualized";
 import SkeletonItem from "./SkeletonItem";
 import BookItem from "./BookItem";
 
-const InfiniteScrollList: React.FC = () => {
+const InfiniteScrollList = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { books, loading, hasMore, page } = useSelector((state: RootState) => state.books);
 

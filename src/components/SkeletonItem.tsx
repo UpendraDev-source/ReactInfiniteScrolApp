@@ -1,8 +1,7 @@
-import React from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css"; 
 
-const SkeletonItem: React.FC = () => {
+const SkeletonItem = () => {
   return (
     <div style={{ display: "flex", padding: "10px", borderBottom: "1px solid #ddd" }}>
       <Skeleton height={150} width={100} />

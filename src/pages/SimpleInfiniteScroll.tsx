@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 interface Book {
@@ -7,13 +7,13 @@ interface Book {
   author_name?: string[];
 }
 
-const SimpleInfiniteScroll: React.FC = () => {
+const SimpleInfiniteScroll= () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const listRef = useRef<HTMLDivElement | null>(null);
-  const isFirstLoad = useRef(true); // Prevents duplicate first fetches
+  const isFirstLoad = useRef(true); 
 
   const fetchBooks = async () => {
     if (loading || !hasMore) return;
@@ -35,7 +35,7 @@ const SimpleInfiniteScroll: React.FC = () => {
     setLoading(false);
   };
 
-  // ✅ Prevent first-time double fetch
+
   useEffect(() => {
     if (isFirstLoad.current) {
       fetchBooks();

@@ -15,7 +15,6 @@ const initialState: BooksState = {
   hasMore: true,
 };
 
-// Async thunk to fetch books
 export const fetchBooks = createAsyncThunk<Book[], void, { state: { books: BooksState } }>(
   "books/fetchBooks",
   async (_, { getState }) => {
