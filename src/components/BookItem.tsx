@@ -5,7 +5,6 @@ interface BookProps {
   title: string;
   author?: string[];
 }
-
 const BookItem: React.FC<BookProps> = ({ title, author }) => {
   return (
     <div style={{ padding: "20px", borderBottom: "1px solid #ddd", display: "flex", gap: "15px", alignItems: "center", backgroundColor: "#7dbd9b" }}>

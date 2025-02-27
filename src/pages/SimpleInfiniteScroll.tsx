@@ -65,6 +65,7 @@ const SimpleInfiniteScroll= () => {
     };
   }, [loading]);
 
+  
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", height: "100vh", justifyContent: "center" }}>
       <h2>Simple Infinite Scroll</h2>
