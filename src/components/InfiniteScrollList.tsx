@@ -1,65 +1,47 @@
-import  { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../redux/store";
-import { fetchBooks ,resetBooks} from "../redux/booksSlice";
+import { fetchBooks, resetBooks } from "../redux/booksSlice";
 import { List, AutoSizer, InfiniteLoader } from "react-virtualized";
 import SkeletonItem from "./SkeletonItem";
 import BookItem from "./BookItem";
 
-const InfiniteScrollList = () => {
+const InfiniteScrollList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { books, loading, hasMore, page } = useSelector((state: RootState) => state.books);
 
   const isFirstLoad = useRef(true);
 
-  const logFetchBooks = (pageNum: number) => {
-    console.log(`fetchBooks called for page: ${pageNum}`);
-  };
-
   useEffect(() => {
     if (isFirstLoad.current && !loading) {
       console.log("First load triggered");
-      
-      dispatch(resetBooks()); 
+      dispatch(resetBooks());
       dispatch(fetchBooks());
       isFirstLoad.current = false; 
     }
-  }, []);
+  }, [dispatch, loading]);
 
   const loadMoreRows = useCallback(
-    ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }) => {
-      console.log(`loadMoreRows triggered: startIndex ${startIndex}, stopIndex ${stopIndex}`);
+    async ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }) => {
+      console.log(`🔄 Checking rows: startIndex ${startIndex}, stopIndex ${stopIndex}`);
+  
+      const buffer = 3; 
       
-      if (hasMore && !loading && stopIndex >= books.length - 1) {
-        console.log(`Loading more rows for page: ${page}`);
-        logFetchBooks(page);
-        return dispatch(fetchBooks()).unwrap(); 
+      if (hasMore && !loading && stopIndex >= books.length - buffer) {
+        console.log(`🚀 Fetching more books (Current Page: ${page})`);
+        await dispatch(fetchBooks()).unwrap(); 
       }
-      return Promise.resolve(); 
     },
     [dispatch, loading, hasMore, books.length, page]
   );
-
-
- 
-  const isRowLoaded = ({ index }: { index: number }) => {
-    console.log(`Checking if row ${index} is loaded: ${!!books[index]}`);
-
-    return books.length === 0 ? false : !!books[index];
-  };
   
+  
+    const isRowLoaded = ({ index }: { index: number }) => {
+    console.log(`Checking if row ${index} is loaded: ${!!books[index]}`);
+    return !!books[index];
+  };
 
   return (
-    <>
-    {loading && books.length === 0 && (
-      <div>
-        <SkeletonItem />
-        <SkeletonItem />
-        <SkeletonItem />
-        <SkeletonItem />
-      </div>
-    )}
-    
     <AutoSizer>
       {({ height, width }) => (
         <InfiniteLoader
@@ -78,8 +60,7 @@ const InfiniteScrollList = () => {
               rowRenderer={({ index, key, style }) => {
                 const book = books[index];
                 return (
-                  <div key={key} style={style}  onClick={() => book && alert(`Selected Book: ${book.title}`)} // Alert on click
->
+                  <div key={key} style={style}>
                     {book ? (
                       <BookItem title={book.title} author={book.author_name} />
                     ) : (
@@ -93,7 +74,6 @@ const InfiniteScrollList = () => {
         </InfiniteLoader>
       )}
     </AutoSizer>
-    </>
   );
 };
 
