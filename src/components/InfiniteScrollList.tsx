@@ -14,7 +14,6 @@ const InfiniteScrollList: React.FC = () => {
 
   useEffect(() => {
     if (isFirstLoad.current && !loading) {
-      console.log("First load triggered");
       dispatch(resetBooks());
       dispatch(fetchBooks());
       isFirstLoad.current = false; 
@@ -22,13 +21,10 @@ const InfiniteScrollList: React.FC = () => {
   }, [dispatch, loading]);
 
   const loadMoreRows = useCallback(
-    async ({ startIndex, stopIndex }: { startIndex: number; stopIndex: number }) => {
-      console.log(`🔄 Checking rows: startIndex ${startIndex}, stopIndex ${stopIndex}`);
-  
+    async ({ stopIndex }: { startIndex: number; stopIndex: number }) => {  
       const buffer = 3; 
       
       if (hasMore && !loading && stopIndex >= books.length - buffer) {
-        console.log(`🚀 Fetching more books (Current Page: ${page})`);
         await dispatch(fetchBooks()).unwrap(); 
       }
     },
@@ -37,11 +33,19 @@ const InfiniteScrollList: React.FC = () => {
   
   
     const isRowLoaded = ({ index }: { index: number }) => {
-    console.log(`Checking if row ${index} is loaded: ${!!books[index]}`);
     return !!books[index];
   };
 
   return (
+    <>
+    {loading && books.length === 0 && (
+      <div>
+        <SkeletonItem />
+        <SkeletonItem />
+        <SkeletonItem />
+        <SkeletonItem />
+      </div>
+    )}
     <AutoSizer>
       {({ height, width }) => (
         <InfiniteLoader
@@ -74,6 +78,7 @@ const InfiniteScrollList: React.FC = () => {
         </InfiniteLoader>
       )}
     </AutoSizer>
+    </>
   );
 };
 
